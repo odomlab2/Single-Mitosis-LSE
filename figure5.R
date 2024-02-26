@@ -1,10 +1,10 @@
 ############################
 #####     Figure 5     #####  
 ############################
-library(TxDb.Mmusculus.UCSC.mm10.knownGene)
-library(RColorBrewer)
-library(randtests)
-library(scales)
+require(TxDb.Mmusculus.UCSC.mm10.knownGene)
+require(RColorBrewer)
+require(randtests)
+require(scales)
 
 ##  Chromosome size vector
 ##------------------------

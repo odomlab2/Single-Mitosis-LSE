@@ -1,11 +1,10 @@
-
 ############################
 #####     Figure 2     #####  
 ############################
-library(BSgenome.Mmusculus.UCSC.mm10)
-library(GenomicRanges)
-library(ggplot2)
-library(psych)
+require(BSgenome.Mmusculus.UCSC.mm10)
+require(GenomicRanges)
+require(ggplot2)
+require(psych)
 
 
 

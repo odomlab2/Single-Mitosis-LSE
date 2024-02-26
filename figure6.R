@@ -1,13 +1,11 @@
 ############################
 #####     Figure 6     #####  
 ############################
-library(TxDb.Mmusculus.UCSC.mm10.knownGene)
-# library(BSgenome.Mmusculus.UCSC.mm10)
-library(changepoint)
-library(pheatmap)
-library(viridis)
-# library(regioneR)
-# library(scales)
+require(TxDb.Mmusculus.UCSC.mm10.knownGene)
+require(changepoint)
+require(pheatmap)
+require(viridis)
+require(scales)
 
 ##  Chromosome size vector
 ##------------------------

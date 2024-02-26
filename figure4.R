@@ -1,15 +1,14 @@
-
 ############################
 #####     Figure 4     #####  
 ############################
-library(TxDb.Mmusculus.UCSC.mm10.knownGene)
-library(BSgenome.Mmusculus.UCSC.mm10)
-library(RColorBrewer)
-library(Repitools)
-library(regioneR)
-library(ggplot2)
-library(QuasR)
-library(Gviz)
+require(TxDb.Mmusculus.UCSC.mm10.knownGene)
+require(BSgenome.Mmusculus.UCSC.mm10)
+require(RColorBrewer)
+require(Repitools)
+require(regioneR)
+require(ggplot2)
+require(QuasR)
+require(Gviz)
 
 # RDS file location
 snv.new <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/filtered/PF1_SisterMutations.rds'

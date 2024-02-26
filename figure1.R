@@ -1,8 +1,8 @@
 ############################
 #####     Figure 1     #####  
 ############################
-library(apcluster)
-library(pheatmap)
+require(apcluster)
+require(pheatmap)
 
 
 #######  Panel 1c  ########

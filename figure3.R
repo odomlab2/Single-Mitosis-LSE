@@ -1,9 +1,9 @@
 ############################
 #####     Figure 3     #####  
 ############################
-library(GenomicRanges)
-library(Rsamtools)
-library(scales)
+require(GenomicRanges)
+require(Rsamtools)
+require(scales)
 
 # RDS file location
 snv.new <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/filtered/PF1_SisterMutations.rds'
