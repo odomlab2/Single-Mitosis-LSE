@@ -459,7 +459,7 @@ dev.off()
 
 
 
-#######  Panel 6f  ########
+#######  Panel 6g  ########
 #######------------########
 
 # Vector to assign snp pairs to segmentation
