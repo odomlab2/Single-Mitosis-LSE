@@ -179,9 +179,6 @@ seg.maps <- lapply(snp.match, function(i){
 })
 names(seg.maps) <- paste0('pair', 1:length(seg.maps))
 
-# Clear Plot
-dev.off()
-
 
 
 #######  Panel 6b  ########
@@ -308,6 +305,11 @@ dev.off()
 
 #######  Panel 6d  ########
 #######------------########
+# Sliding genomic windows
+gen.gr <- makeGRangesFromDataFrame(data.frame('chromosome'=names(ch.vec), 'start'=rep(1, length(ch.vec)), 'end'=as.numeric(ch.vec), stringsAsFactors = FALSE),
+                                   start.field='start', end.field='end', seqnames.field = 'chromosome')
+gt.win <- unlist(slidingWindows(gen.gr, width = 1*10^7, step = 10^6))
+
 # Chromosome mapping boundaries
 chrom.breaks <- round(scales::rescale(ch.lines,to=c(1,1000))[-c(1, (length(ch.lines)+1) )], digits=0)
 map.order <- c(3,1,2,4,5,6,7) # Order clones so example clone of 6c is at top
@@ -321,6 +323,39 @@ seg.mat <- do.call(rbind, lapply(map.order, function(x){
   return( rbind(as.numeric(unlist(lapply(1:nrow(seg.maps[[x]]), function(zz) { rep(seg.maps[[x]][zz,'sister1_skew'], rescale.end[zz]) }))),
                 as.numeric(unlist(lapply(1:nrow(seg.maps[[x]]), function(zz) { rep(seg.maps[[x]][zz,'sister2_skew'], rescale.end[zz]) })))) )
 }))
+
+# Calculate skew
+segment.skews <- do.call(cbind, lapply(names(rds.sis), function(x){
+  tmp.gr <- rds.sis[[x]]
+  tmp.gr <- tmp.gr[(tmp.gr$REF=='C' & tmp.gr$ALT=='T') | (tmp.gr$REF=='G' & tmp.gr$ALT=='A') & tmp.gr$TimePoint=='T1']
+  results <- rep(-1, length(tmp.gr)); results[tmp.gr$REF=='C'] <- 1
+  
+  snp.win.ov <- findOverlaps(gt.win, tmp.gr)
+  res <- rep(NA, length(gt.win)); names(res) <- 1:length(gt.win)
+  win.skews <- unlist(lapply(split(results[subjectHits(snp.win.ov)], queryHits(snp.win.ov)), mean))
+  res[names(win.skews)] <- as.numeric(win.skews)
+  res
+}))
+colnames(segment.skews) <- names(rds.sis)
+rownames(segment.skews) <- 1:length(gt.win)
+
+# Number of snps in each segment for each sample
+s.in.win <- do.call(cbind, lapply(names(rds.sis), function(x){
+  tmp.gr <- rds.sis[[x]]
+  tmp.gr <- tmp.gr[(tmp.gr$REF=='C' & tmp.gr$ALT=='T') | (tmp.gr$REF=='G' & tmp.gr$ALT=='A') & tmp.gr$TimePoint=='T1']
+  snp.win.ov <- findOverlaps(tmp.gr, gt.win)
+  res.vector <- rep(0, length(gt.win)); names(res.vector) <- 1:length(res.vector)
+  snps.per.window <- (table(subjectHits(snp.win.ov)))
+  res.vector[names(snps.per.window)] <- as.numeric(snps.per.window)
+  res.vector
+}))
+
+# Take only segments that have at least 3 SNVs
+segment.skews <- segment.skews[(rowSums(s.in.win >= 3)==ncol(segment.skews)),]
+
+# Calculate correlation between segments
+seg.cor <- cor(segment.skews, )
+for(i in 1:ncol(seg.cor)){seg.cor[i,i] <- NA}
 
 # Pair Annotation
 annotation <- data.frame(Pair = rep(1:7, each=2))
@@ -596,7 +631,6 @@ sce.slide <- Reduce('+', lapply(names(sce.map), function(x){
     }
     
     do.call(rbind, lapply(1:length(gt.win), function(v){
-      # message(xx)
       sis1.res <- rep(0, 3); names(sis1.res) <- unique(sce.map[[1]][[1]]$SCE_status)
       sis2.res <- rep(0, 3); names(sis2.res) <- unique(sce.map[[1]][[1]]$SCE_status)
       sis1.cts <- table(subsetByOverlaps(sce.map[[x]][[1]], gt.win[v])$SCE_status)
