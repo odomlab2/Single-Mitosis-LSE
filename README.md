@@ -8,10 +8,10 @@ Repitools, randtests, Rsamtools, apcluster, regioneR, pheatmap, mixtools, ggplot
 QuasR, Gviz, grid
 
 **Processed files**
-GEO submission GSE230579
-PF1 mutations: GSE230579_PF1_SisterMutations.rds.gz
-CAST/C3H liver tumour mutations: GSE230579_F1CastB6_mutations.rds.gz
-ATAC peaks table in PF1: GSE230579_PF1_ATAC_Peaks.rds.gz
+GEO submission GSE230579. 
+PF1 mutations: GSE230579_PF1_SisterMutations.rds.gz, 
+CAST/C3H liver tumour mutations: GSE230579_F1CastB6_mutations.rds.gz, 
+ATAC peaks table in PF1: GSE230579_PF1_ATAC_Peaks.rds.gz, 
 RNA genic counts in PF1: GSE230579_PF1_RNA_counts.rds.gz
 
 **BAM file generation**
