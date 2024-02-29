@@ -8,8 +8,8 @@ require(pheatmap)
 #######  Panel 1c  ########
 #######------------########
 
-# Path to Phenomex measurements (will be in GitHub deposition)
-bl.path <- '/omics/groups/OE0538/internal/users/p281o/projects/lce_mechanism/berkeley_lights/D69353'
+# Path to Phenomex measurements. Tables are in a folder titled Phenomex_Tables in this repository
+bl.path <- 'Path to Phenomex folder with tables'
 
 # Load time points 
 tps <- lapply(list.files(bl.path,pattern='TP', full.names = TRUE), read.delim, sep='\t', stringsAsFactors= FALSE)
@@ -19,7 +19,7 @@ names(tps) <- unlist(lapply(list.files(bl.path,pattern='TP'), function(x){unlist
 pen.ids <- unlist(lapply(tps, function(x) { unique(x$PenId) }))
 all.timepoints <- as.numeric(names(table(pen.ids))[as.numeric(table(pen.ids))==length(tps)])
 
-# Remove PenIds where 
+# Remove PenIDs where 
 # 1) there is more than one cell in timepoint 0 
 # 2) Cells are very small or very large
 sc.size <- unique(tps[[1]]$PenId[tps[[1]]$CellsInPen == 1 & tps[[1]]$DiameterMicrons >= 6 & tps[[1]]$DiameterMicrons <= 10])
@@ -39,7 +39,7 @@ cell.counts <- do.call(cbind, lapply(tpf, function(x){ lengths(split(x$CellsInPe
 prolif.filt <- unlist(lapply(1:nrow(cell.counts), function(x){ identical(order(cell.counts[x,]), 1:ncol(cell.counts))}))
 cell.counts <- cell.counts[prolif.filt,]
 
-# Filter Pens where there was a jump from 1  to 3 cells (n = 1, counting error)
+# Filter Pens where there was a jump from 1 to 3 cells (n = 1, counting error)
 cell.jump <- unlist(lapply(1:nrow(cell.counts), function(x){ cts.tmp <- cell.counts[x,] 
 max(unlist(lapply(2:length(cts.tmp), function(z){ cts.tmp[z] - cts.tmp[(z-1)] }))) > 1 }))
 cell.counts <- cell.counts[!(cell.jump),]

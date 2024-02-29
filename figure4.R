@@ -12,7 +12,7 @@ require(Gviz)
 
 
 # RDS file location
-snv.new <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/filtered/PF1_SisterMutations.rds'
+snv.new <- 'Path to PF1_SisterMutations.rds'
 all.mutations <- readRDS(snv.new); all.mutations <- all.mutations[all.mutations$FILTER]
 
 # Split into single samples
@@ -45,7 +45,7 @@ all.unique <- unlist(as(lapply(snp.match, function(x){
 names(all.unique) <- 1:length(all.unique)
 
 # RNA data
-rna.cts <- readRDS('/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/Genic_and_RNA/PF1_RNA_counts.rds')
+rna.cts <- readRDS('Path to PF1_RNA_counts.rds')
 gene.dist <- 1000; gene.width <- 1000
 rna.cts <- rna.cts[(values(distanceToNearest(rna.cts))$distance >= gene.dist) & width(rna.cts) >= gene.width]
 
@@ -78,10 +78,12 @@ ch.vec <- seqlengths(txdb); ch.vec <- ch.vec[!(names(ch.vec) %in% c('chrY', 'chr
 chr.win <- tileGenome(seqlengths = ch.vec, tilewidth = 10^5, cut.last.tile.in.chrom = TRUE)
 
 # Bam Files for RNA and DNA
-rna.bams <- read.delim('/omics/groups/OE0538/internal/users/p281o/projects/lce_mechanism/sequencing/seqID_27232/samples.txt', sep='\t', stringsAsFactors = FALSE)
-rna.bam <- rna.bams[3,'FileName']
-atac.bams <- read.delim('/omics/groups/OE0538/internal/users/p281o/projects/lce_mechanism/sequencing/seqID_30724/samples_quasr.txt', sep='\t', stringsAsFactors = FALSE)
-atac.bam <- atac.bams[1,'FileName']
+# The file samples_rna.txt and samples_atac.txt are tab delimited files with the first column
+#   being the path to the bam file (FileName), and the second column the sample name (SampleName)
+rna.bams <- read.delim('Path to rna_samples.txt file', sep='\t', stringsAsFactors = FALSE)
+rna.bam <- rna.bams['replicate_3','FileName']
+atac.bams <- read.delim('Path to atac_samples.txt', sep='\t', stringsAsFactors = FALSE)
+atac.bam <- atac.bams['replicate_1','FileName']
 
 # Using Chek2 genomic window
 gene.window <- chr.win
@@ -164,7 +166,7 @@ gt <- tileGenome(seqlengths = ch.vec, tilewidth = 10^4, cut.last.tile.in.chrom =
 gt.mapp <- mappabilityCalc(gt, BSgenome.Mmusculus.UCSC.mm10)
 analyzeable.gen <- gt[gt.mapp >= 0.95]
 
-#  Genomic Trinucleotide Frequencies
+# Genomic Trinucleotide Frequencies
 bg.tri <- colSums(trinucleotideFrequency(BSgenome::getSeq(BSgenome.Mmusculus.UCSC.mm10, analyzeable.gen)))
 # Relevant trinucleotides are at C or G bases (both UV and ROS happen at these bases)
 bg.tri <- bg.tri[unlist(lapply(names(bg.tri), function(x){ (unlist(strsplit(x,''))[2] %in% c('C','G')) }))]
@@ -453,20 +455,22 @@ seqlevels(rnd.positions) <- seqlevelsInUse(rnd.positions)
 names(rnd.positions) <- 1:length(rnd.positions)
               
 # QuasR object variable
-proj <- qAlign(sampleFile = '/omics/groups/OE0538/internal/users/p281o/projects/lce_mechanism/sequencing/seqID_30724/samples_quasr.txt',
+proj <- qAlign(sampleFile = 'Path to atac_samples.txt',
               genome = 'BSgenome.Mmusculus.UCSC.mm10', 
               paired = 'fr',
-              cacheDir = '/omics/groups/OE0538/internal/users/p281o/tmp')
+              cacheDir = 'Path to local directiory for temporary counting files')
               
 # Window size to profile around mutations
 window.size <- 10001
               
-# Profile reads
-snp <- qProfile(proj, query=all.unique, upstream=window.size, clObj = cluObj)
+# Profile reads around mutations
+# Can be parallelized by using the clObj parameter of qProfile
+snp <- qProfile(proj, query=all.unique, upstream=window.size)
 atac.snps <- snp$replicate1
               
-# Table with 10kb profile around randomized positions of overlapping genes for each expression category
-rnd <- qProfile(proj, query=rnd.positions, upstream=window.size, clObj = cluObj)
+# Profile reads around randomized locations
+# Can be parallelized by using the clObj parameter of qProfile
+rnd <- qProfile(proj, query=rnd.positions, upstream=window.size)
 rnd.snps <- rnd$replicate1
 
 # Distinguish UV and ROS mutations

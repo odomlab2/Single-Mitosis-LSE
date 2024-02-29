@@ -14,7 +14,7 @@ txdb <- keepStandardChromosomes(TxDb.Mmusculus.UCSC.mm10.knownGene)
 ch.vec <- seqlengths(txdb); ch.vec <- ch.vec[!(names(ch.vec) %in% c('chrY', 'chrM'))]
 
 # Mutations called using 99588 as background, which has higher depth and thus few X chromosome mutations
-rds.file <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/F1Tumor_NewCall/F1CastB6_mutations.rds'
+rds.file <- 'Path to F1CastB6_mutations.rds'
 rds <- readRDS(rds.file) ; rds <- rds[rds$FILTER]
 rds.cd <- split(rds, rds$SAMPLE)
 
@@ -383,11 +383,6 @@ for(i in names(seg.mat)){
   pheatmap(seg.mat[[i]], color=segment.colors, show_colnames = FALSE, show_rownames=FALSE, border_color = NA, main=i, 
            cluster_rows = FALSE, cluster_cols = FALSE, gaps_col  = chrom.breaks, cellheight = 15, cellwidth=0.65,
            legend_breaks = c(0.1,0.9), legend_labels = c("T>N", "A>N"))
-  
-  # Chromosome text
-  grid.text(gsub('chr','', names(ch.vec)),
-            x=c(0.116, 0.17, 0.219, 0.265, 0.312, 0.355, 0.398, 0.439, 0.477, 0.515, 0.552, 0.588, 0.625, 0.662, 0.696, 0.727, 0.757, 0.785, 0.81, 0.846),
-            y=0.35)
 }
 
 

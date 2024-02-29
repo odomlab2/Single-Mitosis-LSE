@@ -7,7 +7,7 @@ require(ggplot2)
 require(psych)
 
 # RDS file location
-snv.new <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/filtered/PF1_SisterMutations.rds'
+snv.new <- 'Path to PF1_SisterMutations.rds'
 
 # Read in SRA table, split by sister name, remove negative controls
 all.mutations <- readRDS(snv.new)
@@ -166,8 +166,8 @@ dev.off()
 #######------------########
 
 # Cosmic SBS signatures version 3.2
-cosmic.sigs <- read.delim('/omics/groups/OE0538/internal/users/p281o/data_published/annotation/mm10/GRCm38_based/COSMIC_v3.2_SBS_mm10.txt',
-                          sep='\t', stringsAsFactors = FALSE)
+#   Can be downloaded from https://cancer.sanger.ac.uk/cosmic
+cosmic.sigs <- read.delim('Path to COSMIC_v3.2_SBS_mm10.txt', sep='\t', stringsAsFactors = FALSE)
 
 # Reorder mutations to match the mutation signature as above in Panel 2d
 tri.changes <- unlist(lapply(cosmic.sigs$Type, function(x){
@@ -196,7 +196,7 @@ dev.off()
 #######  Panels 2f,g,h  ########
 #######-----------------########
 
-# Selection vector for UV or oxidation damage (based on C>T or C>A mutations respectively)
+# Selection vector for UV or oxidation damage (based on C>T or C>A mutations, respectively)
 uv.snvs <- lapply(names(rds.sis), function(x){ (rds.sis[[x]]$REF=='C' & rds.sis[[x]]$ALT=='T') | (rds.sis[[x]]$REF=='G' & rds.sis[[x]]$ALT=='A')})
 ox.snvs <- lapply(names(rds.sis), function(x){ (rds.sis[[x]]$REF=='C' & rds.sis[[x]]$ALT=='A') | (rds.sis[[x]]$REF=='G' & rds.sis[[x]]$ALT=='T')})
 names(uv.snvs) <- names(rds.sis); names(ox.snvs) <- names(rds.sis)

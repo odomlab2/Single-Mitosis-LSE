@@ -7,7 +7,7 @@ require(pheatmap)
 require(scales)
 
 # RDS file location
-snv.new <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/filtered/PF1_SisterMutations.rds'
+snv.new <- 'Path to PF1_SisterMutations.rds'
 all.mutations <- readRDS(snv.new); all.mutations <- all.mutations[all.mutations$FILTER]
 
 # Split into single samples
@@ -75,20 +75,11 @@ uv.gr <- makeGRangesFromDataFrame(uv.dual, seqnames.field = 'chrom', start.field
 
 ##  Extracting Reads over dual mutations  
 ##----------------------------------------
-# Chip 53
-ref.key <- read.delim('/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/sra_transfer/Sample_key.txt', sep='\t', stringsAsFactors = FALSE)
-ref.slice <- ref.key$SRA_names; names(ref.slice) <- ref.key$Name
-df.53 <- read.delim('/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/snv_input.txt', sep='\t', stringsAsFactors = FALSE, header=FALSE)
-bams.53 <- df.53[,2]; names(bams.53) <- as.character(c(ref.slice[gsub('_mf_unq.bam','', basename(df.53[1:8,2]))], ref.slice[18:19]))
-
-# Chip 43
-df.43 <- read.delim('/omics/groups/OE0538/internal/users/p281o/projects/lce_mechanism/sequencing/seqID_24871/snv_input.txt', sep='\t', stringsAsFactors = FALSE, header=FALSE)
-bams.43 <- df.43[-7,1]
-slice.43 <- ref.key$SRA_names; names(slice.43) <- ref.key$ASID
-names(bams.43) <- slice.43[gsub('AS-(\\d+)_sort.*','\\1', basename(bams.43))]
-
-# All bams
-bam.files <- c(bams.53, bams.43)
+# Read in table of pf1_samples.txt. This is a tab delimited file with the first column (FileName)
+#   being the path to the bam files, and the second column being the sample name (SampleName) as referenced in the GEO
+#   and SRA submissions
+bam.table <- read.delim("Path to folder containing pf1_samples.txt", sep='\t', stringsAsFactors = FALSE)
+bam.files <- bam.table$FileName; names(bam.files) <- bam.table$SampleName
 
 # Relevant info to retrieve for overlapping reads
 what <- c("strand", "pos", "qwidth", "seq", "cigar")
@@ -213,7 +204,7 @@ for(dp.ex in 1:length(dual.alleles)){
   # Base vector
   b.vec <- c('N'=0, 'A'=2, 'C'=3,'T'=4,'G'=5)
   
-  # Get read events
+  # Iterate over reads
   read.mat <- do.call(rbind, lapply(1:length(bam[[1]]$seq) , function(x){
     
     # Result vector
@@ -226,7 +217,7 @@ for(dp.ex in 1:length(dual.alleles)){
     width.adjust <- 0
     read.length <- bam[[1]]$qwidth[x]
     
-    # Check if insertion
+    # Check for insertions
     if(has.insert[x]){
       
       insertion.pos <- unlist(lapply(which(ids %in% 'I'), function(i){ sum(as.numeric(matches[1:(i-1)]))+1}))
@@ -248,7 +239,7 @@ for(dp.ex in 1:length(dual.alleles)){
       }
     }
     
-    # Check if deletion
+    # Check for deletions
     if(has.deletion[x]){
       
       deletion.pos <- unlist(lapply(which(ids %in% 'D'), function(d){ sum(as.numeric(matches[1:(d-1)]))+1}))
@@ -305,7 +296,7 @@ for(dp.ex in 1:length(dual.alleles)){
         first.base <- 11 - bases.covered
         res[first.base:window.flank] <- 1
       }
-      # make base change color at mutation site
+      # Make base change color at mutation site
       res[c(window.flank+c(1,2))] <- as.numeric(b.vec[base.changes])
     }
     res

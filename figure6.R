@@ -12,7 +12,7 @@ txdb <- keepStandardChromosomes(TxDb.Mmusculus.UCSC.mm10.knownGene)
 ch.vec <- seqlengths(txdb); ch.vec <- ch.vec[!(names(ch.vec) %in% c('chrY', 'chrM'))]
 
 # Read in mutations
-snv.new <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/filtered/PF1_SisterMutations.rds'
+snv.new <- 'Path to PF1_SisterMutations.rds'
 all.mutations <- readRDS(snv.new); all.mutations <- all.mutations[all.mutations$FILTER]
 
 # Split into single samples
@@ -103,12 +103,10 @@ seg.maps <- lapply(snp.match, function(i){
     
     # Skew calculations
     # For Sister 1
-    # sis1.snps <- sis.ls[['sister_1']]
     sis1.snps <- sister.1[as.character(seqnames(sister.1))==names(ch.vec)[iii]]
     sis1.vec <- rep(0, length(sis1.snps)); sis1.vec[sis1.snps$REF=='C'] <- 1
     
     # For Sister 2
-    # sis2.snps <- sis.ls[['sister_2']]
     sis2.snps <- sister.2[as.character(seqnames(sister.2))==names(ch.vec)[iii]]
     sis2.vec <- rep(0, length(sis2.snps)); sis2.vec[sis2.snps$REF=='C'] <- 1
     
@@ -145,10 +143,10 @@ seg.maps <- lapply(snp.match, function(i){
       
     }
     
-    # position of segment start and end points, stitched genome
+    # Position of segment start and end points, stitched genome
     if(iii==1){ current.begin = 1 } else{ current.begin <- sum(ch.vec[1:(iii-1)]) } 
     
-    # local chromosome segment
+    # Local chromosome segment
     if(length(cut.points)==1){
       chr.start <- 1
       chr.end <- as.numeric(ch.vec[iii])
@@ -160,7 +158,7 @@ seg.maps <- lapply(snp.match, function(i){
     # Set last point to end of chromosomes
     if(chr.end[length(chr.end)] <- ch.vec[iii]){ chr.end[length(chr.end)] <- ch.vec[iii]}
     
-    # result data frame of start, end, skew and chromosome
+    #Rresult data frame of start, end, skew and chromosome
     results <- data.frame('chrom'=rep(names(ch.vec)[iii], length(cut.points)),
                           'start_gen'=c(current.begin,  (current.begin + as.numeric(start(rel.snps)[cut.points[-length(cut.points)]]) )),
                           'start_chr'=chr.start,
@@ -480,7 +478,7 @@ sce.map <- lapply(names(seg.maps), function(i){
   sis2.snvs <- sis2.snvs[(sis2.snvs$REF=='C' & sis2.snvs$ALT=='T')|(sis2.snvs$REF=='G' & sis2.snvs$ALT=='A')]
   elementMetadata(sis2.snvs)$SCE_status <- rep('mixed', length(sis2.snvs))
   
-  # rescale skew to -1, 1
+  # Rescale skew to -1, 1
   current.map$sister1_skew <- rescale(x = current.map$sister1_skew, newrange = c(-1,1))
   current.map$sister2_skew <- rescale(x = current.map$sister2_skew, newrange = c(-1,1))
   
@@ -522,7 +520,6 @@ sce.map <- lapply(names(seg.maps), function(i){
           sis1.snvs$SCE_status[(overlap.vec1 & sis1.snvs$REF=="G" & sis1.snvs$ALT=="A")] <- 'Non_SCE'
           sis2.snvs$SCE_status[(overlap.vec2 & sis2.snvs$REF=="G" & sis2.snvs$ALT=="A")] <- 'SCE'
           sis2.snvs$SCE_status[(overlap.vec2 & sis2.snvs$REF=="C" & sis2.snvs$ALT=="T")] <- 'Non_SCE' 
-          
         }
         
       }

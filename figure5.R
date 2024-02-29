@@ -11,7 +11,7 @@ txdb <- keepStandardChromosomes(TxDb.Mmusculus.UCSC.mm10.knownGene)
 ch.vec <- seqlengths(txdb); ch.vec <- ch.vec[!(names(ch.vec) %in% c('chrY', 'chrM'))]
 
 # Read in mutations
-snv.new <- '/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/chip53_NewCall/filtered/PF1_SisterMutations.rds'
+snv.new <- 'Path to PF1_SisterMutations.rds'
 all.mutations <- readRDS(snv.new); all.mutations <- all.mutations[all.mutations$FILTER]
 
 # Split into single samples
@@ -76,15 +76,15 @@ layout(mat=layout.matrix)
 par(mar=c(5,5,4,0))
 plot(rl20.df[,'ROS_total_pval'], rl20.df[,'ROS_total_rl20'], col=alpha('cyan4', alpha = 0.6), pch=19, log='y',
      ylim=c(1,50), ylab='rl20', xlab='-log10(pval)', xlim=c(0,15), cex=2.7, cex.lab=2.1, cex.axis=1.8)
-abline(v=-log10(0.05), col='blue', lty=2)
-abline(v=4.5, h=5.5, col='blue')
-legend('topright', col = c('firebrick4', 'cyan4'), bty='n', legend=c('UV', 'ROS'),
+  abline(v=-log10(0.05), col='blue', lty=2)
+  abline(v=4.5, h=5.5, col='blue')
+  legend('topright', col = c('firebrick4', 'cyan4'), bty='n', legend=c('UV', 'ROS'),
        border=NA, cex=1.8, pch=19)
 
 par(mar=c(5,1,4,1))
 plot(order(rl20.df[,'UV_pval']), rl20.df[,'UV_rl20'], log='y', ylim=c(1,50), pch=19, col=alpha('firebrick4', alpha=0.6), cex=2.7, xaxt='n',
      yaxt='n', xlab='', ylab='', xlim=c(0,15))
-abline(h=5.5, col='blue')
+  abline(h=5.5, col='blue')
 
 # Clear Plot
 dev.off()
@@ -209,7 +209,7 @@ segment.skews <- data.frame(do.call(rbind, lapply(names(rds.sis), function(x){
 })), stringsAsFactors = FALSE); colnames(segment.skews) <- c('Skew_UV', 'UV_count', 'Skew_ROS', 'ROS_count', 'Sample')
 
 
-# Adapt bernoulli trial to include information about C > T mutations not likely from UV
+# Adapt Bernoulli trial to include information about C > T mutations not likely from UV
 # Assumption is that the C > T from background is proportional to the C > A signal
 ct.ratio <- unlist(lapply(names(rds.sis), function(x){
   tmp.gr <- rds.sis[[x]]
@@ -236,7 +236,7 @@ mixes[,1] <- mixes[,1]+(0.5 * ct.bg[, 'Prop_Tot_CT']) # Half of the error
 mixes[,4] <- mixes[,4]-(0.5 * ct.bg[, 'Prop_Tot_CT']) # Half of the error
 rownames(mixes) <- names(rds.sis)
 
-# create skews based on background mutation
+# Create skews based on background mutation
 set.seed(101)
 bins.per.sample <- table(segment.skews$Sample[as.numeric(segment.skews[, 'UV_count'])>= 10])
 uv.exp <- scales::rescale(x = unlist(lapply(rownames(mixes), function(x){
