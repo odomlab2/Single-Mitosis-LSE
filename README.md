@@ -17,3 +17,6 @@ RNA genic counts in PF1: GSE230579_PF1_RNA_counts.rds.gz
 **BAM file generation**
 Raw sequencing data for PF1 sisters and Mus castaneus x C3H tumours are in SRA submission PRJNA934746. Alignment parameters for generating and filtering bam files from raw sequencing data are described in materials and methods under the 
 subheadings "Whole genome and ATAC alignment and filtering", "Dual-hybrid N-masked reference for WGS F1 tumour haplotype discrimination" and "PF1 RNA-seq data processing and analysis".
+
+**Phenomex files**
+Tables of FUCCI fluorophore imaging on the Phenomex platform are included in this repository and necessary for generating Panel 1c.
