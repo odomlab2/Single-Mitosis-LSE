@@ -12,7 +12,7 @@ require(Gviz)
 
 
 # RDS file location
-snv.new <- 'Path to PF1_SisterMutations.rds'
+snv.new <- 'GSE230579/GSE230579_PF1_SisterMutations.rds'
 all.mutations <- readRDS(snv.new); all.mutations <- all.mutations[all.mutations$FILTER]
 
 # Split into single samples
@@ -45,7 +45,7 @@ all.unique <- unlist(as(lapply(snp.match, function(x){
 names(all.unique) <- 1:length(all.unique)
 
 # RNA data
-rna.cts <- readRDS('Path to PF1_RNA_counts.rds')
+rna.cts <- readRDS('GSE230579/GSE230579_PF1_RNA_counts.rds')
 gene.dist <- 1000; gene.width <- 1000
 rna.cts <- rna.cts[(values(distanceToNearest(rna.cts))$distance >= gene.dist) & width(rna.cts) >= gene.width]
 
@@ -377,7 +377,7 @@ dev.off()
 #######------------########
 
 # ATAC peaks file
-atac.peaks <- readRDS('/omics/groups/OE0538/internal/users/p281o/publications/single_cell_split/ATAC/ATAC_Peaks_PF1.rds')
+atac.peaks <- readRDS('GSE230579/GSE230579_PF1_ATAC_Peaks.rds')
 
 # Trinucleotide frequencies centered on C and G bases in ATAC peaks
 peak.tri <- colSums(trinucleotideFrequency(BSgenome::getSeq(BSgenome.Mmusculus.UCSC.mm10, atac.peaks)))

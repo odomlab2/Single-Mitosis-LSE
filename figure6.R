@@ -12,7 +12,7 @@ txdb <- keepStandardChromosomes(TxDb.Mmusculus.UCSC.mm10.knownGene)
 ch.vec <- seqlengths(txdb); ch.vec <- ch.vec[!(names(ch.vec) %in% c('chrY', 'chrM'))]
 
 # Read in mutations
-snv.new <- 'Path to PF1_SisterMutations.rds'
+snv.new <- 'GSE230579/GSE230579_PF1_SisterMutations.rds'
 all.mutations <- readRDS(snv.new); all.mutations <- all.mutations[all.mutations$FILTER]
 
 # Split into single samples

@@ -14,7 +14,7 @@ txdb <- keepStandardChromosomes(TxDb.Mmusculus.UCSC.mm10.knownGene)
 ch.vec <- seqlengths(txdb); ch.vec <- ch.vec[!(names(ch.vec) %in% c('chrY', 'chrM'))]
 
 # Mutations called using 99588 as background, which has higher depth and thus few X chromosome mutations
-rds.file <- 'Path to F1CastB6_mutations.rds'
+rds.file <- 'GSE230579/GSE230579_F1CastB6_mutations.rds'
 rds <- readRDS(rds.file) ; rds <- rds[rds$FILTER]
 rds.cd <- split(rds, rds$SAMPLE)
 

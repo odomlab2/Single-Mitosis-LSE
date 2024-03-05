@@ -11,7 +11,7 @@ txdb <- keepStandardChromosomes(TxDb.Mmusculus.UCSC.mm10.knownGene)
 ch.vec <- seqlengths(txdb); ch.vec <- ch.vec[!(names(ch.vec) %in% c('chrY', 'chrM'))]
 
 # Read in mutations
-snv.new <- 'Path to PF1_SisterMutations.rds'
+snv.new <- 'GSE230579/GSE230579_PF1_SisterMutations.rds'
 all.mutations <- readRDS(snv.new); all.mutations <- all.mutations[all.mutations$FILTER]
 
 # Split into single samples
@@ -67,14 +67,11 @@ rl20.df <- do.call(rbind, lapply(names(rds.sis), function(x){
   return(results)
 }))
 
-# Plotting colors
-bar.cols <- brewer.pal(8, 'Dark2')[c(2,1,7)]
-
 # Plot Panel 5a
 layout.matrix <- matrix(c(rep(1, 9), rep(2,3)), nrow = 3, ncol = 4, byrow = FALSE)
 layout(mat=layout.matrix)
 par(mar=c(5,5,4,0))
-plot(rl20.df[,'ROS_total_pval'], rl20.df[,'ROS_total_rl20'], col=alpha('cyan4', alpha = 0.6), pch=19, log='y',
+plot(rl20.df[,'ROS_total_pval'], rl20.df[,'ROS_total_rl20'], col=scales::alpha('cyan4', alpha = 0.6), pch=19, log='y',
      ylim=c(1,50), ylab='rl20', xlab='-log10(pval)', xlim=c(0,15), cex=2.7, cex.lab=2.1, cex.axis=1.8)
   abline(v=-log10(0.05), col='blue', lty=2)
   abline(v=4.5, h=5.5, col='blue')
@@ -82,7 +79,7 @@ plot(rl20.df[,'ROS_total_pval'], rl20.df[,'ROS_total_rl20'], col=alpha('cyan4', 
        border=NA, cex=1.8, pch=19)
 
 par(mar=c(5,1,4,1))
-plot(order(rl20.df[,'UV_pval']), rl20.df[,'UV_rl20'], log='y', ylim=c(1,50), pch=19, col=alpha('firebrick4', alpha=0.6), cex=2.7, xaxt='n',
+plot(order(rl20.df[,'UV_pval']), rl20.df[,'UV_rl20'], log='y', ylim=c(1,50), pch=19, col=scales::alpha('firebrick4', alpha=0.6), cex=2.7, xaxt='n',
      yaxt='n', xlab='', ylab='', xlim=c(0,15))
   abline(h=5.5, col='blue')
 
@@ -270,18 +267,18 @@ label.size <- 1.75
 par(mfrow=c(2,2))
 
 plot(dens.uv, col='white', xlab='skew', xlim=c(-1.3,1.3), main='mutation phasing', cex.axis=label.size, cex.lab=label.size, ylab='density')
-polygon(dens.uv, col = alpha('darkgrey', alpha = 0.8), border=NA)
+polygon(dens.uv, col = scales::alpha('darkgrey', alpha = 0.8), border=NA)
 
-hist(as.numeric(segment.skews[as.numeric(segment.skews[,'UV_count']) >= 10,'Skew_UV']), breaks=20, xlab='skew', ylab='density', main='UV', col=alpha('firebrick4', alpha=0.6), 
+hist(as.numeric(segment.skews[as.numeric(segment.skews[,'UV_count']) >= 10,'Skew_UV']), breaks=20, xlab='skew', ylab='density', main='UV', col = scales::alpha('firebrick4', alpha=0.6), 
      cex.axis=label.size, cex.lab=label.size, freq=FALSE, border=NA)
-hist(uv.exp, breaks=20, main="", xlab='', ylab='', col=alpha('darkgrey', alpha=0.7) , cex.axis=label.size, cex.lab=label.size, freq=FALSE, border=NA, add=TRUE)
+hist(uv.exp, breaks=20, main="", xlab='', ylab='', col = scales::alpha('darkgrey', alpha=0.7) , cex.axis=label.size, cex.lab=label.size, freq=FALSE, border=NA, add=TRUE)
 
 plot(dens.ros, col='white', xlab='skew', ylab='density', xlim=c(-1.3,1.3), main='no mutation phasing', cex.axis=label.size, cex.lab=label.size)
-polygon(dens.ros, col = alpha('darkgrey', alpha=0.8), border=NA)
+polygon(dens.ros, col = scales::alpha('darkgrey', alpha=0.8), border=NA)
 
-hist(as.numeric(segment.skews[as.numeric(segment.skews[,'ROS_count']) >= 10,'Skew_ROS']), breaks=10, xlab='skew', ylab='density', main='ROS', col=alpha('cyan4', alpha=0.5), cex.axis=label.size, 
+hist(as.numeric(segment.skews[as.numeric(segment.skews[,'ROS_count']) >= 10,'Skew_ROS']), breaks=10, xlab='skew', ylab='density', main='ROS', col = scales::alpha('cyan4', alpha=0.5), cex.axis=label.size, 
      cex.lab=label.size, freq=FALSE, border=NA)
-hist(ros.expected, breaks=10, main="", xlab='', ylab='', col=alpha('darkgrey', alpha=0.7), cex.axis=label.size, 
+hist(ros.expected, breaks=10, main="", xlab='', ylab='', col = scales::alpha('darkgrey', alpha=0.7), cex.axis=label.size, 
      cex.lab=label.size, freq = FALSE, border=NA, add=TRUE)
 
 # Clear Plot
@@ -300,11 +297,11 @@ ros.uv.comp <- qqplot(as.numeric(segment.skews[as.numeric(segment.skews[,'ROS_co
 # Plot Panel 5e
 par(mfrow=c(2,1))
 qqplot(uv.exp, as.numeric(segment.skews[as.numeric(segment.skews[,'UV_count']) >= 10,'Skew_UV']),  pch=19, cex=0.8, 
-       col=alpha('firebrick4', alpha=0.2), xlab='theoretical quartiles', ylab='sample quartiles', main='UV')
-  points(uv.ros.comp, col=alpha('darkgrey', alpha=0.1), pch=19, cex=0.8)
+       col = scales::alpha('firebrick4', alpha=0.2), xlab='theoretical quartiles', ylab='sample quartiles', main='UV')
+  points(uv.ros.comp, col = scales::alpha('darkgrey', alpha=0.1), pch=19, cex=0.8)
   abline(0,1, col= 'black', lwd=2, lty=6)
 
 qqplot(as.numeric(segment.skews[as.numeric(segment.skews[,'ROS_count']) >= 10,'Skew_ROS']),  ros.expected, pch=19, cex=0.8, 
-       col=alpha('cyan4', alpha=0.2), xlab='theoretical quartiles', ylab='sample quartiles', main='ROS')
-  points(ros.uv.comp, col=alpha('darkgrey', alpha=0.1), pch=19, cex=0.8)
+       col = scales::alpha('cyan4', alpha=0.2), xlab='theoretical quartiles', ylab='sample quartiles', main='ROS')
+  points(ros.uv.comp, col = scales::alpha('darkgrey', alpha=0.1), pch=19, cex=0.8)
   abline(0,1, col='black', lwd=2, lty=6)

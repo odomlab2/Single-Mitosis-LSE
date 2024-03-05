@@ -3,11 +3,15 @@
 ############################
 require(BSgenome.Mmusculus.UCSC.mm10)
 require(GenomicRanges)
+require(GEOquery)
 require(ggplot2)
 require(psych)
 
-# RDS file location
-snv.new <- 'Path to PF1_SisterMutations.rds'
+# Fetch RDS files and tables from GEO
+# It will save them in your working directory
+if(!file.exists('GSE230579')){ getGEOSuppFiles(GEO='GSE230579') }
+for(geo_file in list.files('GSE230579', pattern='.gz$', full.names=TRUE)) {gunzip(geo_file)}
+snv.new <- 'GSE230579/GSE230579_PF1_SisterMutations.rds'
 
 # Read in SRA table, split by sister name, remove negative controls
 all.mutations <- readRDS(snv.new)
@@ -154,7 +158,7 @@ for(i in 1:length(snp.list)){
   # Plot Panel 2d
   barplot(results/sum(results), col=col.trinuc, las=2, cex.names = 0.5, ylab='frequency',
           main=paste0(names(snp.list)[i],' Mutations'), border=NA, xaxt='n')
-  legend('topright', legend = mutations.of.interest, fill = unique(col.trinuc), bty = 'n', cex=0.8)
+  legend('topright', legend = mutations.of.interest, fill = unique(col.trinuc), bty = 'n', cex=0.6, border = NA)
 }
 
 # Clear Plot
@@ -182,11 +186,11 @@ par(mfrow=c(2,1))
 
 # SBS7a, UV
 barplot(cosmic.sigs[,'SBS7a'], col=col.trinuc, las=2, cex.names=0.5, ylab='frequency', main='SBS7a', border=NA, xaxt='n')
-legend('topright', legend = mutations.of.interest, fill = unique(col.trinuc), bty = 'n', cex=0.8)
+legend('topright', legend = mutations.of.interest, fill = unique(col.trinuc), bty = 'n', cex=0.6, border=NA)
 
 # SBS18, ROS
 barplot(cosmic.sigs[,'SBS18'], col=col.trinuc, las=2, cex.names=0.5, ylab='frequency', main='SBS18', border=NA, xaxt='n')
-legend('topright', legend = mutations.of.interest, fill = unique(col.trinuc), bty = 'n', cex=0.8)
+legend('topright', legend = mutations.of.interest, fill = unique(col.trinuc), bty = 'n', cex=0.6, border=NA)
 
 # Clear Plot
 dev.off()

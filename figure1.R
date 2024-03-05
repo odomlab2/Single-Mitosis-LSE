@@ -8,8 +8,15 @@ require(pheatmap)
 #######  Panel 1c  ########
 #######------------########
 
-# Path to Phenomex measurements. Tables are in a folder titled Phenomex_Tables in this repository
-bl.path <- 'Path to Phenomex folder with tables'
+# Set working directory where you would like the files to be downloaded, or alternatively update file paths below
+# Download GitHub respository, extract
+download.file(url = "https://github.com/odomlab2/Single-Mitosis-LSE/archive/refs/heads/main.zip",
+              destfile = 'Single_Mitosis_LSE_GitHub.zip')
+unzip(zipfile = 'Single_Mitosis_LSE_GitHub.zip', exdir = './', )
+file.remove('Single_Mitosis_LSE_GitHub.zip')
+
+# Path to tables Phenomex cell measurements
+bl.path <- 'Single-Mitosis-LSE-main/Phenomex_Tables'
 
 # Load time points 
 tps <- lapply(list.files(bl.path,pattern='TP', full.names = TRUE), read.delim, sep='\t', stringsAsFactors= FALSE)
