@@ -3,11 +3,12 @@
 R version 4.3.0
 
 **Required packages:**
-TxDb.Mmusculus.UCSC.mm10.knownGene, BSgenome.Mmusculus.UCSC.mm10, GenomicRanges, RColorBrewer, changepoint,
+GEOquery, TxDb.Mmusculus.UCSC.mm10.knownGene, BSgenome.Mmusculus.UCSC.mm10, GenomicRanges, RColorBrewer, changepoint,
 Repitools, randtests, Rsamtools, apcluster, regioneR, pheatmap, mixtools, ggplot2, viridis, scales, psych
 QuasR, Gviz, grid
 
 **Processed files:**
+All processed rds files and Phenomex tables can be downloaded within R (code is at the beginning of figures 1 and 2). 
 GEO submission GSE230579. 
 PF1 mutations: GSE230579_PF1_SisterMutations.rds.gz, 
 CAST/C3H liver tumour mutations: GSE230579_F1CastB6_mutations.rds.gz, 
